@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5 col-lg-4">
+        <div class="card shadow login-card">
+
+            <!-- Card Header -->
+            <div class="card-header bg-bosch text-white text-center py-4">
+                <i class="bi bi-box-seam-fill" style="font-size: 2.5rem;"></i>
+                <h4 class="mt-2 mb-0">Lab Inventory</h4>
+                <small class="opacity-75">Management Tool</small>
+            </div>
+
+            <!-- Card Body -->
+            <div class="card-body p-4">
+                <form method="POST" action="{{ url_for('main.login') }}"
+                      id="loginForm">
+
+                    <!-- NT ID -->
+                    <div class="mb-3">
+                        <label for="nt_id" class="form-label fw-semibold">
+                            NT ID
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-person-fill"></i>
+                            </span>
+                            <input type="text" class="form-control"
+                                   id="nt_id" name="nt_id"
+                                   placeholder="Enter your NT ID"
+                                   required autofocus>
+                        </div>
+                    </div>
+
+                    <!-- Admin checkbox -->
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input"
+                               id="is_admin" name="is_admin"
+                               onchange="togglePassword()">
+                        <label class="form-check-label" for="is_admin">
+                            Login as Admin
+                        </label>
+                    </div>
+
+                    <!-- Admin password (hidden by default) -->
+                    <div class="mb-3" id="password_group" style="display:none;">
+                        <label for="password" class="form-label fw-semibold">
+                            Admin Password
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-lock-fill"></i>
+                            </span>
+                            <input type="password" class="form-control"
+                                   id="password" name="password"
+                                   placeholder="Enter admin password">
+                        </div>
+                    </div>
+
+                    <!-- Submit -->
+                    <button type="submit" class="btn btn-bosch w-100 py-2">
+                        <i class="bi bi-box-arrow-in-right"></i>&nbsp; Login
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function togglePassword() {
+    const cb  = document.getElementById('is_admin');
+    const pg  = document.getElementById('password_group');
+    pg.style.display = cb.checked ? 'block' : 'none';
+}
+</script>
+{% endblock %}

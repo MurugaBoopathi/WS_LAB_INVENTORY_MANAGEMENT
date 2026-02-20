@@ -1,0 +1,275 @@
+{
+  "cupboards": [
+    {
+      "id": 1,
+      "name": "Cupboard 1 - Measurement Equipment",
+      "items": [
+        {
+          "id": "C1_001",
+          "name": "Digital Oscilloscope 100MHz",
+          "is_locked": true,
+          "borrowed_by": null,
+          "borrowed_at": null
+        },
+        {
+          "id": "C1_002",
+          "name": "Digital Multimeter",
+          "is_locked": true,
+          "borrowed_by": null,
+          "borrowed_at": null
+        },
+        {
+          "id": "C1_003",
+          "name": "Function Generator",
+          "is_locked": true,
+          "borrowed_by": null,
+          "borrowed_at": null
+        },
+        {
+          "id": "C1_004",
+          "name": "Logic Analyzer",
+          "is_locked": true,
+          "borrowed_by": null,
+          "borrowed_at": null
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Cupboard 2 - Power Supplies",
+      "items": [
+        {
+          "id": "C2_001",
+          "name": "DC Power Supply 30V/5A",
+          "is_locked": true,
+          "borrowed_by": null,
+          "borrowed_at": null
+        },
+        {
+          "id": "C2_002",
+          "name": "Variable Power Supply",
+          "is_locked": true,
+          "borrowed_by": null,
+          "borrowed_at": null
+        },
+        {
+          "id": "C2_003",
+          "name": "Battery Charger",
+          "is_locked": true,
+          "borrowed_by": null,
+          "borrowed_at": null
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Cupboard 3 - Development Boards",
+      "items": [
+        {
+          "id": "C3_001",
+          "name": "Arduino Mega",
+          "is_locked": true,
+          "borrowed_by": null,
+          "borrowed_at": null
+        },
+        {
+          "id": "C3_002",
+          "name": "Raspberry Pi 4",
+          "is_locked": true,
+          "borrowed_by": null,
+          "borrowed_at": null
+        },
+        {
+          "id": "C3_003",
+          "name": "STM32 Nucleo Board",
+          "is_locked": true,
+          "borrowed_by": null,
+          "borrowed_at": null
+        },
+        {
+          "id": "C3_004",
+          "name": "ESP32 Dev Kit",
+          "is_locked": true,
+          "borrowed_by": null,
+          "borrowed_at": null
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Cupboard 4 - Networking Equipment",
+      "items": [
+        {
+          "id": "C4_001",
+          "name": "Ethernet Switch 8-Port",
+          "is_locked": true,
+          "borrowed_by": null,
+          "borrowed_at": null
+        },
+        {
+          "id": "C4_003",
+          "name": "Network Cable Tester",
+          "is_locked": true,
+          "borrowed_by": null,
+          "borrowed_at": null
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Cupboard 5 - Testing Tools",
+      "items": [
+        {
+          "id": "C5_001",
+          "name": "JTAG Debugger",
+          "is_locked": true,
+          "borrowed_by": null,
+          "borrowed_at": null
+        },
+        {
+          "id": "C5_002",
+          "name": "USB Protocol Analyzer",
+          "is_locked": true,
+          "borrowed_by": null,
+          "borrowed_at": null
+        },
+        {
+          "id": "C5_003",
+          "name": "CAN Bus Analyzer",
+          "is_locked": true,
+          "borrowed_by": null,
+          "borrowed_at": null
+        },
+        {
+          "id": "C5_004",
+          "name": "Spectrum Analyzer",
+          "is_locked": true,
+          "borrowed_by": null,
+          "borrowed_at": null
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Cupboard 6 - Cables & Connectors",
+      "items": [
+        {
+          "id": "C6_001",
+          "name": "USB-A to USB-B Cable Set",
+          "is_locked": true,
+          "borrowed_by": null,
+          "borrowed_at": null
+        },
+        {
+          "id": "C6_002",
+          "name": "HDMI Cable Set",
+          "is_locked": true,
+          "borrowed_by": null,
+          "borrowed_at": null
+        },
+        {
+          "id": "C6_003",
+          "name": "Jumper Wire Kit",
+          "is_locked": true,
+          "borrowed_by": null,
+          "borrowed_at": null
+        },
+        {
+          "id": "C6_004",
+          "name": "BNC Cable Set",
+          "is_locked": true,
+          "borrowed_by": null,
+          "borrowed_at": null
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Cupboard 7 - Safety Equipment",
+      "items": [
+        {
+          "id": "C7_001",
+          "name": "ESD Wrist Strap",
+          "is_locked": true,
+          "borrowed_by": null,
+          "borrowed_at": null
+        },
+        {
+          "id": "C7_002",
+          "name": "Safety Goggles",
+          "is_locked": true,
+          "borrowed_by": null,
+          "borrowed_at": null
+        },
+        {
+          "id": "C7_003",
+          "name": "Anti-Static Mat",
+          "is_locked": true,
+          "borrowed_by": null,
+          "borrowed_at": null
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Cupboard 8 - Hand Tools",
+      "items": [
+        {
+          "id": "C8_001",
+          "name": "Soldering Station",
+          "is_locked": true,
+          "borrowed_by": null,
+          "borrowed_at": null
+        },
+        {
+          "id": "C8_002",
+          "name": "Precision Screwdriver Set",
+          "is_locked": true,
+          "borrowed_by": null,
+          "borrowed_at": null
+        },
+        {
+          "id": "C8_003",
+          "name": "Wire Stripper",
+          "is_locked": true,
+          "borrowed_by": null,
+          "borrowed_at": null
+        },
+        {
+          "id": "C8_004",
+          "name": "Heat Gun",
+          "is_locked": true,
+          "borrowed_by": null,
+          "borrowed_at": null
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Cupboard 9 - Miscellaneous",
+      "items": [
+        {
+          "id": "C9_001",
+          "name": "Label Printer",
+          "is_locked": true,
+          "borrowed_by": null,
+          "borrowed_at": null
+        },
+        {
+          "id": "C9_002",
+          "name": "USB Hub 7-Port",
+          "is_locked": true,
+          "borrowed_by": null,
+          "borrowed_at": null
+        },
+        {
+          "id": "C9_003",
+          "name": "SD Card Reader",
+          "is_locked": true,
+          "borrowed_by": null,
+          "borrowed_at": null
+        }
+      ]
+    }
+  ]
+}

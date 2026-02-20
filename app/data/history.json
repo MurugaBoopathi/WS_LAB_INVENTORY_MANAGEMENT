@@ -1,0 +1,95 @@
+{
+  "history": [
+    {
+      "timestamp": "2026-02-20 15:51:58",
+      "action": "locked",
+      "item_name": "Digital Oscilloscope 100MHz",
+      "cupboard_name": "Cupboard 1 - Measurement Equipment",
+      "nt_id": "MPI2COB"
+    },
+    {
+      "timestamp": "2026-02-20 15:51:25",
+      "action": "unlocked",
+      "item_name": "Digital Oscilloscope 100MHz",
+      "cupboard_name": "Cupboard 1 - Measurement Equipment",
+      "nt_id": "MPI2COB"
+    },
+    {
+      "timestamp": "2026-02-20 15:50:43",
+      "action": "locked",
+      "item_name": "Digital Oscilloscope 100MHz",
+      "cupboard_name": "Cupboard 1 - Measurement Equipment",
+      "nt_id": "MPI2COB"
+    },
+    {
+      "timestamp": "2026-02-20 15:50:28",
+      "action": "unlocked",
+      "item_name": "Digital Oscilloscope 100MHz",
+      "cupboard_name": "Cupboard 1 - Measurement Equipment",
+      "nt_id": "MPI2COB"
+    },
+    {
+      "timestamp": "2026-02-20 15:29:25",
+      "action": "locked",
+      "item_name": "Ethernet Switch 8-Port",
+      "cupboard_name": "Cupboard 4 - Networking Equipment",
+      "nt_id": "MPI2COB"
+    },
+    {
+      "timestamp": "2026-02-20 15:29:21",
+      "action": "locked",
+      "item_name": "JTAG Debugger",
+      "cupboard_name": "Cupboard 5 - Testing Tools",
+      "nt_id": "MPI2COB"
+    },
+    {
+      "timestamp": "2026-02-20 15:29:17",
+      "action": "locked",
+      "item_name": "DC Power Supply 30V/5A",
+      "cupboard_name": "Cupboard 2 - Power Supplies",
+      "nt_id": "MPI2COB"
+    },
+    {
+      "timestamp": "2026-02-20 15:28:57",
+      "action": "locked",
+      "item_name": "Digital Oscilloscope 100MHz",
+      "cupboard_name": "Cupboard 1 - Measurement Equipment",
+      "nt_id": "MPI2COB"
+    },
+    {
+      "timestamp": "2026-02-20 15:24:33",
+      "action": "unlocked",
+      "item_name": "Ethernet Switch 8-Port",
+      "cupboard_name": "Cupboard 4 - Networking Equipment",
+      "nt_id": "ITO1COB"
+    },
+    {
+      "timestamp": "2026-02-20 15:24:28",
+      "action": "unlocked",
+      "item_name": "Digital Oscilloscope 100MHz",
+      "cupboard_name": "Cupboard 1 - Measurement Equipment",
+      "nt_id": "ITO1COB"
+    },
+    {
+      "timestamp": "2026-02-20 14:58:39",
+      "action": "locked",
+      "item_name": "Ethernet Switch 8-Port",
+      "cupboard_name": "Cupboard 4 - Networking Equipment",
+      "nt_id": "MPI2COB"
+    },
+    {
+      "timestamp": "2026-02-20 14:58:21",
+      "action": "unlocked",
+      "item_name": "DC Power Supply 30V/5A",
+      "cupboard_name": "Cupboard 2 - Power Supplies",
+      "nt_id": "MPI2COB"
+    },
+    {
+      "timestamp": "2026-02-20 14:58:14",
+      "action": "unlocked",
+      "item_name": "JTAG Debugger",
+      "cupboard_name": "Cupboard 5 - Testing Tools",
+      "nt_id": "MPI2COB"
+    }
+  ]
+}

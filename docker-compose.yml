@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  lab-inventory:
+    build: .
+    container_name: lab-inventory-app
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      # --- Secret Key (change in production!) ---
+      - SECRET_KEY=lab-inventory-secret-key-2026
+
+      # --- SMTP Configuration ---
+      - SMTP_SERVER=rb-smtp.2mdc.net
+      - SMTP_PORT=25
+      - SMTP_USE_TLS=False
+      - SMTP_USERNAME=
+      - SMTP_PASSWORD=
+
+      # --- Email Recipients ---
+      - ADMIN_EMAIL=mpi2cob@bosch.com
+      - MANAGER_EMAIL=mpi2cob@bosch.com
+      - SENDER_EMAIL=lab-inventory-noreply@bosch.com
+      - EMAIL_DOMAIN=@bosch.com
+
+      # --- Admin Credentials ---
+      - ADMIN_NT_ID=ADMIN
+      - ADMIN_PASSWORD=Admin@123
+
+      # --- App Settings ---
+      - HOST=0.0.0.0
+      - PORT=5000
+    volumes:
+      # Persist inventory data outside the container
+      - inventory-data:/app/app/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  inventory-data:
+    driver: local

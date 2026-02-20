@@ -1,0 +1,28 @@
+Demo:
+Lab Inventory And Handling Management Tool:
+
+Input:
+The data about the Lab Items will be entered by the admin manually.
+It will be an onetime activity.
+Admin can add/remove any items based on the need.
+
+The data format would be:
+ 
+The UI has to be in the below format
+(Given format is an example)
+ 
+Working Summary
+•	The UI shall contain multiple blocks as shown in the above image. The current requirement is to have 9 blocks since we have 9 cupboards.
+•	Each block should have list of hardware items available in the cupboard and it is visible while seeing the page.
+•	Each hardware item will have a lock button at the end.
+•	When user clicks the lock button it will show the button is unlocked and the mail is triggered to admin, manager and the person who unlocked it.
+•	The system must capture the NT ID, who unlocked it.
+•	User can lock it back by clicking the same lock button and again the mail will be triggered stating the hardware is returned for the same stakeholder in the above point.
+Roles & Access
+Admin
+•	Read and modify (write) contents.
+•	Can lock/unlock items.
+User
+•	Can only lock/unlock items.
+•	Cannot modify contents.
+
