@@ -1,6 +1,27 @@
 {
   "history": [
     {
+      "timestamp": "2026-02-20 17:11:18",
+      "action": "locked",
+      "item_name": "Variable Power Supply",
+      "cupboard_name": "Cupboard 2 - Power Supplies",
+      "nt_id": "MPI2COB"
+    },
+    {
+      "timestamp": "2026-02-20 17:11:10",
+      "action": "unlocked",
+      "item_name": "Variable Power Supply",
+      "cupboard_name": "Cupboard 2 - Power Supplies",
+      "nt_id": "MPI2COB"
+    },
+    {
+      "timestamp": "2026-02-20 17:11:00",
+      "action": "unlocked",
+      "item_name": "DC Power Supply 30V/5A",
+      "cupboard_name": "Cupboard 2 - Power Supplies",
+      "nt_id": "MPI2COB"
+    },
+    {
       "timestamp": "2026-02-20 15:51:58",
       "action": "locked",
       "item_name": "Digital Oscilloscope 100MHz",

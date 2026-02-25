@@ -6,28 +6,21 @@
       "items": [
         {
           "id": "C1_001",
-          "name": "Digital Oscilloscope 100MHz",
+          "name": "Renesas RH850 D3 board",
           "is_locked": true,
           "borrowed_by": null,
           "borrowed_at": null
         },
         {
           "id": "C1_002",
-          "name": "Digital Multimeter",
+          "name": "Renesas RH850 D4 board",
           "is_locked": true,
           "borrowed_by": null,
           "borrowed_at": null
         },
         {
           "id": "C1_003",
-          "name": "Function Generator",
-          "is_locked": true,
-          "borrowed_by": null,
-          "borrowed_at": null
-        },
-        {
-          "id": "C1_004",
-          "name": "Logic Analyzer",
+          "name": "Renesas RH850 F1KHD8",
           "is_locked": true,
           "borrowed_by": null,
           "borrowed_at": null
@@ -40,21 +33,21 @@
       "items": [
         {
           "id": "C2_001",
-          "name": "DC Power Supply 30V/5A",
-          "is_locked": true,
-          "borrowed_by": null,
-          "borrowed_at": null
+          "name": "Infineon IFX3 40nm",
+          "is_locked": false,
+          "borrowed_by": "MPI2COB",
+          "borrowed_at": "2026-02-20 17:11:00"
         },
         {
           "id": "C2_002",
-          "name": "Variable Power Supply",
+          "name": "Infineon IFX5 40nm",
           "is_locked": true,
           "borrowed_by": null,
           "borrowed_at": null
         },
         {
           "id": "C2_003",
-          "name": "Battery Charger",
+          "name": "Infineon IFX4 65nm",
           "is_locked": true,
           "borrowed_by": null,
           "borrowed_at": null
