@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8 col-lg-5">
+
+        <!-- Step Progress -->
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <small class="text-muted fw-semibold">
+                    <i class="bi bi-map"></i>&nbsp; Step 1 of 3
+                </small>
+                <small class="text-muted">Country &rsaquo; Business Unit &rsaquo; Chapter</small>
+            </div>
+            <div class="progress selection-progress">
+                <div class="progress-bar bg-bosch" style="width: 33%;"></div>
+            </div>
+        </div>
+
+        <!-- Selection Card -->
+        <div class="card shadow selection-card">
+            <div class="card-header bg-bosch text-white py-3 text-center">
+                <i class="bi bi-globe2" style="font-size: 1.6rem;"></i>
+                <h5 class="mt-2 mb-0">Select Country</h5>
+                <small class="opacity-75">Choose your country to proceed</small>
+            </div>
+            <div class="card-body p-4">
+                <div class="row g-4 justify-content-center">
+                    {% for country in countries %}
+                    <div class="col-6">
+                        <form method="POST">
+                            <input type="hidden" name="country" value="{{ country }}">
+                            <button type="submit" class="btn country-btn w-100">
+                                <div class="country-flag">
+                                    {% if country == 'IN' %}🇮🇳{% elif country == 'DE' %}🇩🇪{% endif %}
+                                </div>
+                                <div class="country-code">{{ country }}</div>
+                                <div class="country-name">
+                                    {% if country == 'IN' %}India
+                                    {% elif country == 'DE' %}Germany
+                                    {% endif %}
+                                </div>
+                            </button>
+                        </form>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

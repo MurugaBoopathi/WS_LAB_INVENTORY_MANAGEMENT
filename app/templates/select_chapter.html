@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8 col-lg-6">
+
+        <!-- Step Progress -->
+        <div class="mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <small class="text-muted fw-semibold">
+                    <i class="bi bi-people-fill"></i>&nbsp; Step 3 of 3
+                </small>
+                <small class="text-muted">Country &rsaquo; Business Unit &rsaquo; Chapter</small>
+            </div>
+            <div class="progress selection-progress">
+                <div class="progress-bar bg-bosch" style="width: 100%;"></div>
+            </div>
+        </div>
+
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb selection-breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ url_for('main.select_country') }}">
+                        <i class="bi bi-globe2"></i> Country
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ url_for('main.select_bu') }}">
+                        {% if country == 'IN' %}🇮🇳{% elif country == 'DE' %}🇩🇪{% endif %}
+                        {{ country }}
+                    </a>
+                </li>
+                <li class="breadcrumb-item active fw-bold">{{ bu }}</li>
+                <li class="breadcrumb-item text-muted">Chapter</li>
+            </ol>
+        </nav>
+
+        <!-- Selection Card -->
+        <div class="card shadow selection-card">
+            <div class="card-header bg-bosch text-white py-3 text-center">
+                <i class="bi bi-bookmark-star-fill" style="font-size: 1.6rem;"></i>
+                <h5 class="mt-2 mb-0">Select Chapter</h5>
+                <small class="opacity-75">
+                    {% if country == 'IN' %}🇮🇳{% elif country == 'DE' %}🇩🇪{% endif %}
+                    &nbsp;{{ country }} &rsaquo; {{ bu }} &mdash; Choose your Chapter
+                </small>
+            </div>
+            <div class="card-body p-4">
+                <div class="row g-3">
+                    {% for chapter in chapters %}
+                    <div class="col-12">
+                        <form method="POST">
+                            <input type="hidden" name="chapter" value="{{ chapter }}">
+                            <button type="submit" class="btn chapter-btn w-100">
+                                <i class="bi bi-bookmark-fill chapter-icon"></i>
+                                <span class="chapter-label">{{ chapter }}</span>
+                                <i class="bi bi-arrow-right chapter-arrow ms-auto"></i>
+                            </button>
+                        </form>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="mt-3">
+            <a href="{{ url_for('main.select_bu') }}"
+               class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-left"></i>&nbsp; Back to Business Unit Selection
+            </a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

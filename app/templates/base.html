@@ -25,7 +25,16 @@
             </a>
 
             {% if session.get('nt_id') %}
-            <div class="d-flex align-items-center gap-2">
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                {% if session.get('country') and session.get('business_unit') and session.get('chapter') %}
+                <span class="navbar-text text-white-50 small d-none d-md-inline">
+                    {% if session.get('country') == 'IN' %}🇮🇳{% elif session.get('country') == 'DE' %}🇩🇪{% endif %}
+                    {{ session.get('country') }}
+                    &rsaquo; {{ session.get('business_unit') }}
+                    &rsaquo; {{ session.get('chapter') }}
+                </span>
+                <span class="navbar-divider d-none d-md-inline">|</span>
+                {% endif %}
                 {% if session.get('role') == 'admin' %}
                 <a class="nav-link text-white" href="{{ url_for('main.history') }}">
                     <i class="bi bi-clock-history"></i> History

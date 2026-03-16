@@ -34,9 +34,9 @@
         {
           "id": "C2_001",
           "name": "Infineon IFX3 40nm",
-          "is_locked": false,
-          "borrowed_by": "MPI2COB",
-          "borrowed_at": "2026-02-20 17:11:00"
+          "is_locked": true,
+          "borrowed_by": null,
+          "borrowed_at": null
         },
         {
           "id": "C2_002",

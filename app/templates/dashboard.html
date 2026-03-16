@@ -2,6 +2,31 @@
 
 {% block content %}
 
+<!-- ===== Selection Context Banner ===== -->
+<div class="selection-context-banner mb-4">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+        <div class="d-flex align-items-center flex-wrap gap-2">
+            <span class="selection-context-label">Your Selection:</span>
+            <span class="selection-badge selection-badge-country">
+                <i class="bi bi-globe2"></i>&nbsp;
+                {% if country == 'IN' %}🇮🇳{% elif country == 'DE' %}🇩🇪{% endif %}
+                {{ country }}
+            </span>
+            <i class="bi bi-chevron-right text-muted small"></i>
+            <span class="selection-badge selection-badge-bu">
+                <i class="bi bi-diagram-3-fill"></i>&nbsp;{{ business_unit }}
+            </span>
+            <i class="bi bi-chevron-right text-muted small"></i>
+            <span class="selection-badge selection-badge-chapter">
+                <i class="bi bi-bookmark-fill"></i>&nbsp;{{ chapter }}
+            </span>
+        </div>
+        <a href="{{ url_for('main.select_country') }}" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-pencil-fill"></i>&nbsp; Change Selection
+        </a>
+    </div>
+</div>
+
 <!-- ===== Header Row ===== -->
 <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
     <h4 class="mb-0">
