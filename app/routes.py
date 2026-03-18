@@ -10,12 +10,12 @@ main_bp = Blueprint('main', __name__)
 
 
 # ------------------------------------------------------------------
-# Navigation Structure: Country → Business Unit → Chapter
+# Navigation Structure: Country → Department → Group
 # ------------------------------------------------------------------
 
 COUNTRIES = ['IN', 'DE']
 
-BUSINESS_UNITS = {
+DEPARTMENTS = {
     'IN': [
         ('EBA', 'Automotive Aftermarket'),
         ('EBB', 'Bosch Diagnostics'),
@@ -40,69 +40,65 @@ BUSINESS_UNITS = {
     ],
 }
 
-CHAPTERS = {
+GROUPS = {
     'EBA': [
-        'EBA Chapter 1',
-        'EBA Chapter 2',
-        'EBA Chapter 3',
-        'EBA Chapter 4',
-        'EBA Chapter 5',
+        'EBA1',
+        'EBA2',
+        'EBA3',
+        'EBA6',
     ],
     'EBB': [
-        'EBB1',
         'EBB2',
-        'EBB3',
         'EBB4',
         'EBB5',
+        'EBB6',
+        'EBB7',
     ],
     'EBD': [
-        'EBD Chapter 1',
-        'EBD Chapter 2',
-        'EBD Chapter 3',
-        'EBD Chapter 4',
-        'EBD Chapter 5',
+        'EBD1',
+        'EBD2',
+        'EBD3',
+        'EBD4',
+        'EBD5',
+        'EBD6',
     ],
     'ECP': [
-        'ECP Chapter 1',
-        'ECP Chapter 2',
-        'ECP Chapter 3',
-        'ECP Chapter 4',
-        'ECP Chapter 5',
+        'ECP1',
+        'ECP2',
+        'ECP3',
+        'ECP5',
     ],
     'ECT': [
-        'ECT Chapter 1',
-        'ECT Chapter 2',
-        'ECT Chapter 3',
-        'ECT Chapter 4',
-        'ECT Chapter 5',
+        'ECT1',
+        'ECT2',
+        'ECT3',
     ],
     'EMT': [
-        'EMT Chapter 1',
-        'EMT Chapter 2',
-        'EMT Chapter 3',
-        'EMT Chapter 4',
-        'EMT Chapter 5',
+        'EMT1',
+        'EMT2',
+        'EMT3',
     ],
     'ETA': [
-        'ETA Chapter 1',
-        'ETA Chapter 2',
-        'ETA Chapter 3',
-        'ETA Chapter 4',
-        'ETA Chapter 5',
+        'ETA1',
+        'ETA2',
+        'ETA3',
+        'ETA4',
+        'ETA5',
+        'ETA6',
+        'ETA7',
+        'ETA8',
+        'ETA9',
     ],
     'ETE': [
-        'ETE Chapter 1',
-        'ETE Chapter 2',
-        'ETE Chapter 3',
-        'ETE Chapter 4',
-        'ETE Chapter 5',
+        'ETE1',
+        'ETE2',
     ],
     'EXP': [
-        'EXP Chapter 1',
-        'EXP Chapter 2',
-        'EXP Chapter 3',
-        'EXP Chapter 4',
-        'EXP Chapter 5',
+        'EXP1',
+        'EXP2',
+        'EXP3',
+        'EXP4',
+        'EXP5',
     ],
 }
 
@@ -148,10 +144,10 @@ def index():
     if 'nt_id' in session:
         if not session.get('country'):
             return redirect(url_for('main.select_country'))
-        if not session.get('business_unit'):
-            return redirect(url_for('main.select_bu'))
-        if not session.get('chapter'):
-            return redirect(url_for('main.select_chapter'))
+        if session.get('country') != 'DE' and not session.get('department'):
+            return redirect(url_for('main.select_department'))
+        if session.get('country') != 'DE' and not session.get('group'):
+            return redirect(url_for('main.select_group'))
         return redirect(url_for('main.dashboard'))
     return redirect(url_for('main.login'))
 
@@ -204,17 +200,17 @@ def logout():
 def dashboard():
     if not session.get('country'):
         return redirect(url_for('main.select_country'))
-    if not session.get('business_unit'):
-        return redirect(url_for('main.select_bu'))
-    if not session.get('chapter'):
-        return redirect(url_for('main.select_chapter'))
+    if session.get('country') != 'DE' and not session.get('department'):
+        return redirect(url_for('main.select_department'))
+    if session.get('country') != 'DE' and not session.get('group'):
+        return redirect(url_for('main.select_group'))
     cupboards = _dm().get_all_cupboards()
     return render_template(
         'dashboard.html',
         cupboards=cupboards,
         country=session['country'],
-        business_unit=session['business_unit'],
-        chapter=session['chapter'],
+        department=session.get('department'),
+        group=session.get('group'),
     )
 
 
@@ -229,52 +225,61 @@ def select_country():
         country = request.form.get('country', '').strip()
         if country in COUNTRIES:
             session['country'] = country
-            session.pop('business_unit', None)
-            session.pop('chapter', None)
-            return redirect(url_for('main.select_bu'))
+            session.pop('department', None)
+            session.pop('group', None)
+            # Germany has no Department/Group hierarchy — go straight to dashboard
+            if country == 'DE':
+                return redirect(url_for('main.dashboard'))
+            return redirect(url_for('main.select_department'))
         flash('Invalid country selection.', 'danger')
     return render_template('select_country.html', countries=COUNTRIES)
 
 
-@main_bp.route('/select-bu', methods=['GET', 'POST'])
+@main_bp.route('/select-department', methods=['GET', 'POST'])
 @login_required
-def select_bu():
+def select_department():
     country = session.get('country')
     if not country:
         return redirect(url_for('main.select_country'))
-    bus = BUSINESS_UNITS.get(country, [])
+    # Germany does not use Department/Group — redirect away
+    if country == 'DE':
+        return redirect(url_for('main.dashboard'))
+    depts = DEPARTMENTS.get(country, [])
     if request.method == 'POST':
-        bu = request.form.get('business_unit', '').strip()
-        bu_codes = [code for code, _ in bus]
-        if bu in bu_codes:
-            session['business_unit'] = bu
-            session.pop('chapter', None)
-            return redirect(url_for('main.select_chapter'))
-        flash('Invalid business unit selection.', 'danger')
-    return render_template('select_bu.html', country=country, business_units=bus)
+        dept = request.form.get('department', '').strip()
+        dept_codes = [code for code, _ in depts]
+        if dept in dept_codes:
+            session['department'] = dept
+            session.pop('group', None)
+            return redirect(url_for('main.select_group'))
+        flash('Invalid department selection.', 'danger')
+    return render_template('select_department.html', country=country, departments=depts)
 
 
-@main_bp.route('/select-chapter', methods=['GET', 'POST'])
+@main_bp.route('/select-group', methods=['GET', 'POST'])
 @login_required
-def select_chapter():
+def select_group():
     country = session.get('country')
-    bu = session.get('business_unit')
+    dept = session.get('department')
     if not country:
         return redirect(url_for('main.select_country'))
-    if not bu:
-        return redirect(url_for('main.select_bu'))
-    chapters = CHAPTERS.get(bu, [])
+    # Germany does not use Department/Group — redirect away
+    if country == 'DE':
+        return redirect(url_for('main.dashboard'))
+    if not dept:
+        return redirect(url_for('main.select_department'))
+    groups = GROUPS.get(dept, [])
     if request.method == 'POST':
-        chapter = request.form.get('chapter', '').strip()
-        if chapter in chapters:
-            session['chapter'] = chapter
+        group = request.form.get('group', '').strip()
+        if group in groups:
+            session['group'] = group
             return redirect(url_for('main.dashboard'))
-        flash('Invalid chapter selection.', 'danger')
+        flash('Invalid group selection.', 'danger')
     return render_template(
-        'select_chapter.html',
+        'select_group.html',
         country=country,
-        bu=bu,
-        chapters=chapters,
+        dept=dept,
+        groups=groups,
     )
 
 

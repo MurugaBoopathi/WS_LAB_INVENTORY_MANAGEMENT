@@ -9,17 +9,21 @@
             <span class="selection-context-label">Your Selection:</span>
             <span class="selection-badge selection-badge-country">
                 <i class="bi bi-globe2"></i>&nbsp;
-                {% if country == 'IN' %}🇮🇳{% elif country == 'DE' %}🇩🇪{% endif %}
+                {% if country == 'IN' %}<span class="fi fi-in" style="border-radius:3px;"></span>{% elif country == 'DE' %}<span class="fi fi-de" style="border-radius:3px;"></span>{% endif %}
                 {{ country }}
             </span>
+            {% if department %}
             <i class="bi bi-chevron-right text-muted small"></i>
-            <span class="selection-badge selection-badge-bu">
-                <i class="bi bi-diagram-3-fill"></i>&nbsp;{{ business_unit }}
+            <span class="selection-badge selection-badge-dept">
+                <i class="bi bi-diagram-3-fill"></i>&nbsp;{{ department }}
             </span>
+            {% endif %}
+            {% if group %}
             <i class="bi bi-chevron-right text-muted small"></i>
-            <span class="selection-badge selection-badge-chapter">
-                <i class="bi bi-bookmark-fill"></i>&nbsp;{{ chapter }}
+            <span class="selection-badge selection-badge-group">
+                <i class="bi bi-people-fill"></i>&nbsp;{{ group }}
             </span>
+            {% endif %}
         </div>
         <a href="{{ url_for('main.select_country') }}" class="btn btn-sm btn-outline-secondary">
             <i class="bi bi-pencil-fill"></i>&nbsp; Change Selection

@@ -10,7 +10,7 @@
                 <small class="text-muted fw-semibold">
                     <i class="bi bi-map"></i>&nbsp; Step 1 of 3
                 </small>
-                <small class="text-muted">Country &rsaquo; Business Unit &rsaquo; Chapter</small>
+                <small class="text-muted">Country &rsaquo; Department &rsaquo; Group</small>
             </div>
             <div class="progress selection-progress">
                 <div class="progress-bar bg-bosch" style="width: 33%;"></div>
@@ -31,13 +31,20 @@
                         <form method="POST">
                             <input type="hidden" name="country" value="{{ country }}">
                             <button type="submit" class="btn country-btn w-100">
-                                <div class="country-flag">
-                                    {% if country == 'IN' %}🇮🇳{% elif country == 'DE' %}🇩🇪{% endif %}
+                                <div class="country-flag-wrapper">
+                                    {% if country == 'IN' %}
+                                    <span class="fi fi-in country-flag-icon"></span>
+                                    {% elif country == 'DE' %}
+                                    <span class="fi fi-de country-flag-icon"></span>
+                                    {% else %}
+                                    <span class="fi fi-{{ country | lower }} country-flag-icon"></span>
+                                    {% endif %}
                                 </div>
                                 <div class="country-code">{{ country }}</div>
                                 <div class="country-name">
                                     {% if country == 'IN' %}India
                                     {% elif country == 'DE' %}Germany
+                                    {% else %}{{ country }}
                                     {% endif %}
                                 </div>
                             </button>

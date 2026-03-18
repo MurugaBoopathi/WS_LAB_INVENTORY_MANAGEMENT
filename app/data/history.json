@@ -1,6 +1,27 @@
 {
   "history": [
     {
+      "timestamp": "2026-03-18 10:38:46",
+      "action": "unlocked",
+      "item_name": "Renesas RH850 D3 board",
+      "cupboard_name": "Cupboard 1 - Measurement Equipment",
+      "nt_id": "MPI2COB"
+    },
+    {
+      "timestamp": "2026-03-17 11:43:42",
+      "action": "locked",
+      "item_name": "Renesas RH850 D3 board",
+      "cupboard_name": "Cupboard 1 - Measurement Equipment",
+      "nt_id": "MPI2COB"
+    },
+    {
+      "timestamp": "2026-03-17 11:42:49",
+      "action": "unlocked",
+      "item_name": "Renesas RH850 D3 board",
+      "cupboard_name": "Cupboard 1 - Measurement Equipment",
+      "nt_id": "MPI2COB"
+    },
+    {
       "timestamp": "2026-03-16 17:33:22",
       "action": "locked",
       "item_name": "Renesas RH850 D3 board",

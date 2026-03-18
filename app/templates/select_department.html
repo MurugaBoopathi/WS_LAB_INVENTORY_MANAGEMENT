@@ -10,7 +10,7 @@
                 <small class="text-muted fw-semibold">
                     <i class="bi bi-building"></i>&nbsp; Step 2 of 3
                 </small>
-                <small class="text-muted">Country &rsaquo; Business Unit &rsaquo; Chapter</small>
+                <small class="text-muted">Country &rsaquo; Department &rsaquo; Group</small>
             </div>
             <div class="progress selection-progress">
                 <div class="progress-bar bg-bosch" style="width: 66%;"></div>
@@ -26,11 +26,11 @@
                     </a>
                 </li>
                 <li class="breadcrumb-item active fw-bold">
-                    {% if country == 'IN' %}🇮🇳{% elif country == 'DE' %}🇩🇪{% endif %}
+                    {% if country == 'IN' %}<span class="fi fi-in" style="border-radius:3px;"></span>{% elif country == 'DE' %}<span class="fi fi-de" style="border-radius:3px;"></span>{% endif %}
                     {{ country }}
                 </li>
-                <li class="breadcrumb-item text-muted">Business Unit</li>
-                <li class="breadcrumb-item text-muted">Chapter</li>
+                <li class="breadcrumb-item text-muted">Department</li>
+                <li class="breadcrumb-item text-muted">Group</li>
             </ol>
         </nav>
 
@@ -38,21 +38,22 @@
         <div class="card shadow selection-card">
             <div class="card-header bg-bosch text-white py-3 text-center">
                 <i class="bi bi-diagram-3-fill" style="font-size: 1.6rem;"></i>
-                <h5 class="mt-2 mb-0">Select Business Unit</h5>
+                <h5 class="mt-2 mb-0">Select Department</h5>
                 <small class="opacity-75">
-                    {% if country == 'IN' %}🇮🇳{% elif country == 'DE' %}🇩🇪{% endif %}
-                    &nbsp;{{ country }} &mdash; Choose your Business Unit
+                    {% if country == 'IN' %}<span class="fi fi-in" style="border-radius:3px;"></span>{% elif country == 'DE' %}<span class="fi fi-de" style="border-radius:3px;"></span>{% endif %}
+                    &nbsp;{{ country }} &mdash; Choose your Department
                 </small>
             </div>
             <div class="card-body p-4">
                 <div class="row g-3">
-                    {% for code, name in business_units %}
+                    {% for code, name in departments %}
                     <div class="col-md-4 col-sm-6">
                         <form method="POST">
-                            <input type="hidden" name="business_unit" value="{{ code }}">
-                            <button type="submit" class="btn bu-btn w-100">
-                                <div class="bu-code">{{ code }}</div>
-                                <div class="bu-name">{{ name }}</div>
+                            <input type="hidden" name="department" value="{{ code }}">
+                            <button type="submit" class="btn dept-btn w-100">
+                                <i class="bi bi-diagram-3-fill dept-icon"></i>
+                                <div class="dept-code">{{ code }}</div>
+                                <div class="dept-name">{{ name }}</div>
                             </button>
                         </form>
                     </div>

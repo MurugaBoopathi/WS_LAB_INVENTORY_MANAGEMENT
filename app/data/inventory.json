@@ -7,9 +7,9 @@
         {
           "id": "C1_001",
           "name": "Renesas RH850 D3 board",
-          "is_locked": true,
-          "borrowed_by": null,
-          "borrowed_at": null
+          "is_locked": false,
+          "borrowed_by": "MPI2COB",
+          "borrowed_at": "2026-03-18 10:38:46"
         },
         {
           "id": "C1_002",
