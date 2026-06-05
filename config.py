@@ -1,4 +1,28 @@
 import os
+import sys
+import configparser
+
+
+def _load_settings_ini():
+    """
+    Load settings.ini from the same directory as the exe (or script).
+    Injects values into os.environ so Config picks them up via os.environ.get().
+    """
+    if hasattr(sys, '_MEIPASS'):
+        base = os.path.dirname(sys.executable)
+    else:
+        base = os.path.dirname(os.path.abspath(__file__))
+
+    ini_path = os.path.join(base, 'settings.ini')
+    if os.path.exists(ini_path):
+        cfg = configparser.ConfigParser()
+        cfg.read(ini_path)
+        if cfg.has_section('settings'):
+            for key, val in cfg.items('settings'):
+                os.environ.setdefault(key.upper(), val)
+
+
+_load_settings_ini()
 
 
 class Config:
@@ -29,11 +53,14 @@ class Config:
     ADMIN_NT_ID = os.environ.get('ADMIN_NT_ID', 'ADMIN')
     ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'Admin@123')
 
-    # Data file path (JSON-based, no database)
-    DATA_FILE = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)),
-        'app', 'data', 'inventory.json'
+    # Data file path — works in dev mode and as compiled exe
+    # When frozen: stored next to the .exe so it is writable
+    _base_dir = (
+        os.path.dirname(sys.executable)
+        if hasattr(sys, '_MEIPASS')
+        else os.path.dirname(os.path.abspath(__file__))
     )
+    DATA_FILE = os.path.join(_base_dir, 'data', 'inventory.json')
 
     # Application Host & Port
     HOST = os.environ.get('HOST', '0.0.0.0')

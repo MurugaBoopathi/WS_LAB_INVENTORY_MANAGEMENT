@@ -1,3 +1,4 @@
+import sys
 from app import create_app
 from config import Config
 
@@ -9,4 +10,10 @@ if __name__ == '__main__':
     print(f"  Running on http://localhost:{Config.PORT}")
     print(f"  Admin NT ID: {Config.ADMIN_NT_ID}")
     print(f"{'=' * 55}\n")
-    app.run(host=Config.HOST, port=Config.PORT, debug=True)
+
+    if hasattr(sys, '_MEIPASS'):
+        # Running as compiled exe — use waitress (production WSGI, Windows-native)
+        from waitress import serve
+        serve(app, host=Config.HOST, port=Config.PORT, threads=4)
+    else:
+        app.run(host=Config.HOST, port=Config.PORT, debug=True)

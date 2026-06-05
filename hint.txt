@@ -1,0 +1,28 @@
+Supported deployment flow
+-------------------------
+
+1. Make code changes
+2. Run build-exe.bat on your machine
+3. Test using client_package\start-exe.bat
+4. Send the generated client_package folder to the client
+
+Client update flow
+------------------
+
+1. Replace lab_inventory.exe with the new version
+2. Keep settings.ini unchanged
+3. Keep data\ unchanged
+4. Restart using start-exe.bat
+
+Network sharing
+---------------
+
+1. Run open-firewall.bat as Administrator
+2. Run get-network-info.bat
+3. Share the displayed URL
+
+Example:
+http://192.168.1.105:5000
+
+Recommendation:
+Use a stable IP address on the host machine if the URL should remain constant.

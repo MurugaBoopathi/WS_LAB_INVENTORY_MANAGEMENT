@@ -1,0 +1,72 @@
+========================================
+LAB INVENTORY MANAGEMENT TOOL
+QUICK NETWORK ACCESS SETUP
+========================================
+
+SERVER MACHINE STEPS
+====================
+
+1. Start the application
+   Run:
+       start-exe.bat
+
+2. Open the firewall
+   Right-click and run as Administrator:
+       open-firewall.bat
+
+3. Find the shareable URL
+   Run:
+       get-network-info.bat
+
+4. Share the URL with users
+   Example:
+       http://192.168.1.100:5000
+
+========================================
+
+END USER STEPS
+==============
+
+1. Open a web browser
+2. Enter the shared URL
+3. Login with the provided credentials
+
+Example:
+    http://192.168.1.100:5000
+
+========================================
+
+COMMON CHECKS
+=============
+
+Check local access on the host:
+    http://localhost:5000
+
+Check listening port:
+    netstat -ano | findstr :5000
+
+Check firewall rule:
+    netsh advfirewall firewall show rule name="Lab Inventory Tool"
+
+========================================
+
+IF IT DOES NOT WORK
+===================
+
+1. Make sure start-exe.bat is still running
+2. Use IP address instead of computer name
+3. Confirm both machines are on the same network
+4. Re-run open-firewall.bat as Administrator
+
+========================================
+
+DEFAULT PORT
+============
+
+Default port:
+    5000
+
+If you change the port in settings.ini,
+update the firewall rule and shared URL.
+
+========================================
