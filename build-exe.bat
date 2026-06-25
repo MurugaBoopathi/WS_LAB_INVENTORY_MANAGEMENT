@@ -74,8 +74,9 @@ REM Client-editable configuration
 copy settings.ini               client_package\
 
 REM Data files (inventory + history)
-copy app\data\inventory.json    client_package\data\
-copy app\data\history.json      client_package\data\
+copy data\inventory.json        client_package\data\
+copy data\history.json          client_package\data\
+copy data\users.json            client_package\data\
 
 REM Utility scripts
 copy start-exe.bat              client_package\

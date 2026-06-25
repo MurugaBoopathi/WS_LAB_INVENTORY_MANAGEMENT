@@ -13,32 +13,142 @@
     </a>
 </div>
 
-<!-- ===== Add New Cupboard ===== -->
+<!-- ===== Current Scope ===== -->
 <div class="card mb-4 border-0 shadow-sm">
-    <div class="card-header bg-bosch text-white">
-        <h5 class="mb-0">
-            <i class="bi bi-plus-circle-fill"></i> Add New Cupboard
-        </h5>
+    <div class="card-body d-flex justify-content-between align-items-start flex-wrap gap-4">
+        <div>
+            <div class="text-muted small text-uppercase fw-semibold mb-1">
+                Current Inventory Scope
+            </div>
+            <div class="fw-semibold fs-5">{{ scope_label }}</div>
+            <div class="text-muted small">
+                {% if country == 'DE' %}
+                New cupboards and materials are created only for the selected country.
+                {% else %}
+                New cupboards and materials are created only for this Country / Department / Group.
+                {% endif %}
+            </div>
+        </div>
+        <div class="ms-auto w-100" style="max-width: 520px;">
+            <div class="text-muted small text-uppercase fw-semibold mb-2">
+                Change Inventory Filter
+            </div>
+            <form method="POST"
+                  action="{{ url_for('main.update_admin_scope') }}"
+                  class="row g-2 align-items-end"
+                  id="adminScopeForm">
+                <div class="col-md-4">
+                    <label for="adminCountry" class="form-label small fw-semibold mb-1">
+                        Country
+                    </label>
+                    <select class="form-select" id="adminCountry" name="country" required>
+                        {% for country_code in countries %}
+                        <option value="{{ country_code }}"
+                                {{ 'selected' if country == country_code }}>
+                            {{ country_code }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4" id="adminDepartmentWrapper">
+                    <label for="adminDepartment" class="form-label small fw-semibold mb-1">
+                        Department
+                    </label>
+                    <select class="form-select" id="adminDepartment" name="department">
+                        <option value="">Select department</option>
+                    </select>
+                </div>
+                <div class="col-md-4" id="adminGroupWrapper">
+                    <label for="adminGroup" class="form-label small fw-semibold mb-1">
+                        Group
+                    </label>
+                    <select class="form-select" id="adminGroup" name="group">
+                        <option value="">Select group</option>
+                    </select>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-outline-secondary w-100">
+                        <i class="bi bi-funnel-fill"></i> Apply Filter
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-    <div class="card-body">
-        <form method="POST" action="{{ url_for('main.add_cupboard') }}"
-              class="row g-3">
-            <div class="col-md-8">
-                <input type="text" class="form-control"
-                       name="cupboard_name"
-                       placeholder="e.g. Cupboard 10 - New Equipment"
-                       required>
+</div>
+
+<!-- ===== Create Options ===== -->
+<div class="row g-4 mb-4">
+    <div class="col-lg-6">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-header bg-bosch text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-archive-fill"></i> Create Cupboard
+                </h5>
             </div>
-            <div class="col-md-4">
-                <button type="submit" class="btn btn-bosch w-100">
-                    <i class="bi bi-plus-lg"></i> Add Cupboard
-                </button>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('main.add_cupboard') }}" class="row g-3">
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">Cupboard Name</label>
+                        <input type="text" class="form-control"
+                               name="cupboard_name"
+                               placeholder="e.g. Validation Boards Rack"
+                               required>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-bosch w-100">
+                            <i class="bi bi-plus-lg"></i> Create Cupboard
+                        </button>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-header bg-bosch text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-box-seam"></i> Create Material / Equipment
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if cupboards %}
+                <form method="POST" action="{{ url_for('main.add_item') }}" class="row g-3">
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">Target Cupboard</label>
+                        <select class="form-select" name="cupboard_id" required>
+                            <option value="">Select cupboard</option>
+                            {% for cupboard in cupboards %}
+                            <option value="{{ cupboard.id }}">{{ cupboard.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">Material / Equipment Name</label>
+                        <input type="text" class="form-control"
+                               name="item_name"
+                               placeholder="e.g. Renesas RH850 D4 board"
+                               required>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="bi bi-plus-lg"></i> Create Material / Equipment
+                        </button>
+                    </div>
+                </form>
+                {% else %}
+                <div class="alert alert-warning mb-0">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    Create at least one cupboard in this scope before adding materials or equipment.
+                </div>
+                {% endif %}
+            </div>
+        </div>
     </div>
 </div>
 
 <!-- ===== Cupboard Cards ===== -->
+{% if cupboards %}
 {% for cupboard in cupboards %}
 <div class="card mb-3 border-0 shadow-sm">
 
@@ -64,24 +174,6 @@
     </div>
 
     <div class="card-body">
-
-        <!-- Add item form -->
-        <form method="POST" action="{{ url_for('main.add_item') }}"
-              class="row g-2 mb-3">
-            <input type="hidden" name="cupboard_id"
-                   value="{{ cupboard.id }}">
-            <div class="col-md-8">
-                <input type="text" class="form-control form-control-sm"
-                       name="item_name"
-                       placeholder="Enter new item name" required>
-            </div>
-            <div class="col-md-4">
-                <button type="submit"
-                        class="btn btn-sm btn-success w-100">
-                    <i class="bi bi-plus-lg"></i> Add Item
-                </button>
-            </div>
-        </form>
 
         <!-- Items table -->
         <div class="table-responsive">
@@ -143,5 +235,96 @@
     </div>
 </div>
 {% endfor %}
+{% else %}
+<div class="card border-0 shadow-sm">
+    <div class="card-body text-center py-5 text-muted">
+        <i class="bi bi-inbox" style="font-size: 2rem;"></i>
+        <div class="mt-2 fw-semibold">No cupboards exist for {{ scope_label }}</div>
+        <div class="small">Use the Create Cupboard form above to start this group inventory.</div>
+    </div>
+</div>
+{% endif %}
+
+<script>
+const adminDepartmentsByCountry = {{ departments_by_country | tojson }};
+const adminGroupsByDepartment = {{ groups_by_department | tojson }};
+const selectedAdminCountry = {{ country | tojson }};
+const selectedAdminDepartment = {{ department | tojson }};
+const selectedAdminGroup = {{ group | tojson }};
+
+function fillAdminDepartments(selectedDepartment) {
+    const countrySelect = document.getElementById('adminCountry');
+    const departmentSelect = document.getElementById('adminDepartment');
+    const groupSelect = document.getElementById('adminGroup');
+    const departmentWrapper = document.getElementById('adminDepartmentWrapper');
+    const groupWrapper = document.getElementById('adminGroupWrapper');
+    const selectedCountry = countrySelect.value;
+
+    departmentSelect.innerHTML = '<option value="">Select department</option>';
+    groupSelect.innerHTML = '<option value="">Select group</option>';
+
+    if (selectedCountry === 'DE') {
+        departmentWrapper.style.display = 'none';
+        groupWrapper.style.display = 'none';
+        departmentSelect.required = false;
+        groupSelect.required = false;
+        return;
+    }
+
+    departmentWrapper.style.display = '';
+    groupWrapper.style.display = '';
+    departmentSelect.required = true;
+    groupSelect.required = true;
+
+    const departments = adminDepartmentsByCountry[selectedCountry] || [];
+    departments.forEach(([code, name]) => {
+        const option = document.createElement('option');
+        option.value = code;
+        option.textContent = `${code} - ${name}`;
+        if (selectedDepartment && selectedDepartment === code) {
+            option.selected = true;
+        }
+        departmentSelect.appendChild(option);
+    });
+
+    fillAdminGroups(selectedAdminGroup);
+}
+
+function fillAdminGroups(selectedGroup) {
+    const departmentSelect = document.getElementById('adminDepartment');
+    const groupSelect = document.getElementById('adminGroup');
+    const selectedDepartment = departmentSelect.value;
+    groupSelect.innerHTML = '<option value="">Select group</option>';
+
+    const groups = adminGroupsByDepartment[selectedDepartment] || [];
+    groups.forEach((groupCode) => {
+        const option = document.createElement('option');
+        option.value = groupCode;
+        option.textContent = groupCode;
+        if (selectedGroup && selectedGroup === groupCode) {
+            option.selected = true;
+        }
+        groupSelect.appendChild(option);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const countrySelect = document.getElementById('adminCountry');
+    const departmentSelect = document.getElementById('adminDepartment');
+
+    fillAdminDepartments(selectedAdminDepartment);
+    if (selectedAdminCountry !== 'DE') {
+        fillAdminGroups(selectedAdminGroup);
+    }
+
+    countrySelect.addEventListener('change', () => {
+        fillAdminDepartments(null);
+    });
+
+    departmentSelect.addEventListener('change', () => {
+        fillAdminGroups(null);
+    });
+});
+</script>
 
 {% endblock %}

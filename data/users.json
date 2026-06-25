@@ -1,0 +1,12 @@
+{
+  "users": {
+    "MPI2COB": {
+      "nt_id": "MPI2COB",
+      "name": "Murugaboopathi",
+      "email": "mpi2cob@bosch.com",
+      "phone": "+919944088531",
+      "password_hash": "scrypt:32768:8:1$87JEERXqqhr9jY0u$0f29db76c241b237adbfa5d239e33e749ee62360d824bad3be9e4edd46a5cc2595dcc6ab02ff2da7f67a51a3a333c51152fe15d028966df1089d058ae14d8481",
+      "created_at": "2026-06-05 17:10:18"
+    }
+  }
+}

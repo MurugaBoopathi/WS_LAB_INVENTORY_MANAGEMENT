@@ -61,6 +61,7 @@ class Config:
         else os.path.dirname(os.path.abspath(__file__))
     )
     DATA_FILE = os.path.join(_base_dir, 'data', 'inventory.json')
+    USERS_FILE = os.path.join(_base_dir, 'data', 'users.json')
 
     # Application Host & Port
     HOST = os.environ.get('HOST', '0.0.0.0')

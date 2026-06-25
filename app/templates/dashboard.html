@@ -47,6 +47,7 @@
 </div>
 
 <!-- ===== Cupboard Grid (3 per row) ===== -->
+{% if cupboards %}
 <div class="row g-3 justify-content-center px-xl-5 px-lg-4 px-md-3">
     {% for cupboard in cupboards %}
     {% set avail = cupboard['items'] | selectattr('is_locked') | list | length %}
@@ -167,6 +168,8 @@
                                     {% endif %}
                                 </td>
                                 <td class="text-center">
+                                    {% set admin_can_lock = session.get('role') == 'admin' %}
+                                    {% set can_toggle = item.is_locked or admin_can_lock %}
                                     <button
                                         class="btn btn-sm lock-btn
                                                {{ 'btn-success'
@@ -176,10 +179,13 @@
                                         data-item-id="{{ item.id }}"
                                         data-locked="{{ item.is_locked
                                                         | lower }}"
+                                        {% if not can_toggle %}disabled{% endif %}
                                         onclick="toggleLock(this)"
                                         title="{{ 'Click to borrow (unlock)'
                                                   if item.is_locked
-                                                  else 'Click to return (lock)' }}">
+                                                  else ('Only admin can return (lock) this item'
+                                                        if not admin_can_lock
+                                                        else 'Click to return (lock)') }}">
                                         <i class="bi
                                             {{ 'bi-lock-fill'
                                                if item.is_locked
@@ -215,6 +221,20 @@
     </div>
     {% endfor %}
 </div>
+{% else %}
+<div class="card border-0 shadow-sm">
+    <div class="card-body text-center py-5">
+        <i class="bi bi-inbox text-muted" style="font-size: 2rem;"></i>
+        <h5 class="mt-3 mb-2">No cupboards available for this group</h5>
+        <p class="text-muted mb-0">
+            The selected Country, Department, and Group do not have any cupboards yet.
+            {% if session.get('role') == 'admin' %}
+            Open the Admin Panel to create cupboards and materials for this scope.
+            {% endif %}
+        </p>
+    </div>
+</div>
+{% endif %}
 
 <!-- ===== Toast Notification ===== -->
 <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1090;">

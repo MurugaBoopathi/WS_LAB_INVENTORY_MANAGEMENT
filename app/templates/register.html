@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center mt-4 mb-4">
+    <div class="col-lg-6 col-md-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-bosch text-white text-center py-4">
+                <i class="bi bi-person-vcard-fill" style="font-size: 2.2rem;"></i>
+                <h4 class="mt-2 mb-0">User Registration</h4>
+                <small class="opacity-75">Create your Lab Inventory account</small>
+            </div>
+
+            <div class="card-body p-4">
+                <form method="POST" action="{{ url_for('main.register') }}" class="row g-3">
+                    <div class="col-md-6">
+                        <label for="nt_id" class="form-label fw-semibold">NT ID</label>
+                        <input type="text" class="form-control"
+                               id="nt_id" name="nt_id"
+                               value="{{ form_data.nt_id }}"
+                               placeholder="Format: KNA1COB"
+                               required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="name" class="form-label fw-semibold">Name</label>
+                        <input type="text" class="form-control"
+                               id="name" name="name"
+                               value="{{ form_data.name }}"
+                               placeholder="Enter your full name"
+                               required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="email" class="form-label fw-semibold">Email</label>
+                        <input type="email" class="form-control"
+                               id="email" name="email"
+                               value="{{ form_data.email }}"
+                               placeholder="nt_id@bosch.com"
+                               required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="phone" class="form-label fw-semibold">Phone Number</label>
+                        <input type="text" class="form-control"
+                               id="phone" name="phone"
+                               value="{{ form_data.phone }}"
+                               placeholder="+49 123 456 7890"
+                               required>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="password" class="form-label fw-semibold">Password</label>
+                        <input type="password" class="form-control"
+                               id="password" name="password"
+                               placeholder="At least 8 characters"
+                               required>
+                    </div>
+
+                    <div class="col-12 d-grid gap-2 d-md-flex justify-content-md-end pt-2">
+                        <a href="{{ url_for('main.login') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i>&nbsp; Back to Login
+                        </a>
+                        <button type="submit" class="btn btn-bosch">
+                            <i class="bi bi-person-plus-fill"></i>&nbsp; Register
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

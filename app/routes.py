@@ -3,6 +3,7 @@ from flask import (
     url_for, session, jsonify, flash, current_app,
 )
 from functools import wraps
+from app.auth_manager import AuthManager
 from app.data_manager import DataManager
 from app.email_service import send_notification_email
 
@@ -112,6 +113,41 @@ def _dm():
     return DataManager(current_app.config['DATA_FILE'])
 
 
+def _auth():
+    """Get an AuthManager instance for the current app."""
+    return AuthManager(current_app.config['USERS_FILE'])
+
+
+def _current_scope():
+    """Return the currently selected Country/Department/Group scope."""
+    return {
+        'country': session.get('country'),
+        'department': session.get('department'),
+        'group': session.get('group'),
+    }
+
+
+def _scope_selected():
+    """Return True when Country, Department, and Group are selected."""
+    scope = _current_scope()
+    if scope.get('country') == 'DE':
+        return True
+    return all(scope.values())
+
+
+def _scope_label():
+    """Return a user-friendly label for the currently selected scope."""
+    return DataManager.scope_label(_current_scope())
+
+
+def _parse_int(value):
+    """Parse an integer form or JSON value safely."""
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
+
+
 def login_required(f):
     """Decorator: redirect to login if not authenticated."""
     @wraps(f)
@@ -154,34 +190,122 @@ def index():
 
 @main_bp.route('/login', methods=['GET', 'POST'])
 def login():
+    if 'nt_id' in session:
+        return redirect(url_for('main.index'))
+
     if request.method == 'POST':
-        nt_id = request.form.get('nt_id', '').strip().upper()
-        is_admin = request.form.get('is_admin') == 'on'
+        nt_id = AuthManager.normalize_nt_id(request.form.get('nt_id'))
         password = request.form.get('password', '')
 
         if not nt_id:
             flash('Please enter your NT ID.', 'danger')
-            return render_template('login.html')
+            return render_template('login.html', entered_nt_id=nt_id)
 
-        if is_admin:
-            admin_pw = current_app.config['ADMIN_PASSWORD']
-            if password == admin_pw:
+        if not password:
+            flash('Please enter your password.', 'danger')
+            return render_template('login.html', entered_nt_id=nt_id)
+
+        admin_nt_id = AuthManager.normalize_nt_id(
+            current_app.config['ADMIN_NT_ID']
+        )
+        if nt_id == admin_nt_id:
+            if password == current_app.config['ADMIN_PASSWORD']:
+                session.clear()
                 session.permanent = True
                 session['nt_id'] = nt_id
+                session['display_name'] = 'Administrator'
                 session['role'] = 'admin'
                 flash(f'Welcome Admin ({nt_id})!', 'success')
                 return redirect(url_for('main.select_country'))
-            else:
-                flash('Invalid admin password.', 'danger')
-                return render_template('login.html')
-        else:
-            session.permanent = True
-            session['nt_id'] = nt_id
-            session['role'] = 'user'
-            flash(f'Welcome {nt_id}!', 'success')
-            return redirect(url_for('main.select_country'))
+
+            flash('Invalid admin password.', 'danger')
+            return render_template('login.html', entered_nt_id=nt_id)
+
+        if not AuthManager.is_valid_nt_id(nt_id):
+            flash('NT ID must follow the format MPI2COB.', 'danger')
+            return render_template('login.html', entered_nt_id=nt_id)
+
+        user = _auth().authenticate_user(nt_id, password)
+        if not user:
+            flash('Invalid NT ID or password.', 'danger')
+            return render_template('login.html', entered_nt_id=nt_id)
+
+        session.clear()
+        session.permanent = True
+        session['nt_id'] = user['nt_id']
+        session['display_name'] = user['name']
+        session['email'] = user['email']
+        session['phone'] = user['phone']
+        session['role'] = 'user'
+        flash(f"Welcome {user['name']} ({user['nt_id']})!", 'success')
+        return redirect(url_for('main.select_country'))
 
     return render_template('login.html')
+
+
+@main_bp.route('/register', methods=['GET', 'POST'])
+def register():
+    if 'nt_id' in session:
+        return redirect(url_for('main.index'))
+
+    form_data = {
+        'nt_id': '',
+        'name': '',
+        'email': '',
+        'phone': '',
+    }
+
+    if request.method == 'POST':
+        form_data = {
+            'nt_id': AuthManager.normalize_nt_id(request.form.get('nt_id')),
+            'name': (request.form.get('name') or '').strip(),
+            'email': (request.form.get('email') or '').strip(),
+            'phone': (request.form.get('phone') or '').strip(),
+        }
+        password = request.form.get('password', '')
+        admin_nt_id = AuthManager.normalize_nt_id(
+            current_app.config['ADMIN_NT_ID']
+        )
+
+        if not AuthManager.is_valid_nt_id(form_data['nt_id']):
+            flash('NT ID must follow the format KNA1COB.', 'danger')
+            return render_template('register.html', form_data=form_data)
+
+        if form_data['nt_id'] == admin_nt_id:
+            flash('This NT ID is reserved for the admin account.', 'danger')
+            return render_template('register.html', form_data=form_data)
+
+        if not form_data['name']:
+            flash('Name is required.', 'danger')
+            return render_template('register.html', form_data=form_data)
+
+        if not AuthManager.is_valid_email(form_data['email']):
+            flash('Enter a valid email address.', 'danger')
+            return render_template('register.html', form_data=form_data)
+
+        if not AuthManager.is_valid_phone(form_data['phone']):
+            flash('Enter a valid phone number.', 'danger')
+            return render_template('register.html', form_data=form_data)
+
+        if len(password) < 8:
+            flash('Password must be at least 8 characters long.', 'danger')
+            return render_template('register.html', form_data=form_data)
+
+        if _auth().user_exists(form_data['nt_id']):
+            flash('This NT ID is already registered.', 'danger')
+            return render_template('register.html', form_data=form_data)
+
+        _auth().register_user(
+            form_data['nt_id'],
+            form_data['name'],
+            form_data['email'],
+            form_data['phone'],
+            password,
+        )
+        flash('Registration successful. Please log in with your NT ID and password.', 'success')
+        return redirect(url_for('main.login'))
+
+    return render_template('register.html', form_data=form_data)
 
 
 @main_bp.route('/logout')
@@ -204,7 +328,7 @@ def dashboard():
         return redirect(url_for('main.select_department'))
     if session.get('country') != 'DE' and not session.get('group'):
         return redirect(url_for('main.select_group'))
-    cupboards = _dm().get_all_cupboards()
+    cupboards = _dm().get_all_cupboards(_current_scope())
     return render_template(
         'dashboard.html',
         cupboards=cupboards,
@@ -215,7 +339,7 @@ def dashboard():
 
 
 # ------------------------------------------------------------------
-# Selection Flow: Country → Business Unit → Chapter
+# Selection Flow: Country → Department → Group
 # ------------------------------------------------------------------
 
 @main_bp.route('/select-country', methods=['GET', 'POST'])
@@ -227,7 +351,6 @@ def select_country():
             session['country'] = country
             session.pop('department', None)
             session.pop('group', None)
-            # Germany has no Department/Group hierarchy — go straight to dashboard
             if country == 'DE':
                 return redirect(url_for('main.dashboard'))
             return redirect(url_for('main.select_department'))
@@ -241,7 +364,6 @@ def select_department():
     country = session.get('country')
     if not country:
         return redirect(url_for('main.select_country'))
-    # Germany does not use Department/Group — redirect away
     if country == 'DE':
         return redirect(url_for('main.dashboard'))
     depts = DEPARTMENTS.get(country, [])
@@ -263,7 +385,6 @@ def select_group():
     dept = session.get('department')
     if not country:
         return redirect(url_for('main.select_country'))
-    # Germany does not use Department/Group — redirect away
     if country == 'DE':
         return redirect(url_for('main.dashboard'))
     if not dept:
@@ -290,32 +411,43 @@ def select_group():
 @main_bp.route('/api/toggle-lock', methods=['POST'])
 @login_required
 def toggle_lock():
+    if not _scope_selected():
+        return jsonify({'success': False,
+                        'message': 'Select country, department, and group first.'}), 400
+
     data = request.get_json()
     cupboard_id = data.get('cupboard_id')
     item_id = data.get('item_id')
     nt_id = session.get('nt_id')
+    cupboard_id = _parse_int(cupboard_id)
 
-    if not cupboard_id or not item_id:
+    if cupboard_id is None or not item_id:
         return jsonify({'success': False,
                         'message': 'Missing required fields'}), 400
 
     is_admin = session.get('role') == 'admin'
-    result = _dm().toggle_lock(int(cupboard_id), item_id, nt_id, is_admin)
+    result = _dm().toggle_lock(
+        _current_scope(),
+        cupboard_id,
+        item_id,
+        nt_id,
+        is_admin,
+    )
 
     if result is None:
         return jsonify({'success': False, 'message': 'Item not found'}), 404
 
     action, item_name, cupboard_name = result
 
-    if action == 'not_authorized':
+    if action == 'admin_only_lock':
         return jsonify({
             'success': False,
-            'message': (f'You cannot return "{item_name}" because it was '
-                        f'borrowed by another user.'),
+            'message': (f'Only admin can return (lock) "{item_name}". '
+                        'Users can only borrow (unlock) items.'),
         }), 403
 
     # --- Log to audit history ---
-    _dm().log_action(action, item_name, cupboard_name, nt_id)
+    _dm().log_action(action, item_name, cupboard_name, nt_id, _current_scope())
 
     # --- Send email notification ---
     # NOTE: Email functionality is disabled until SMTP details are provided.
@@ -386,21 +518,76 @@ def history():
 @main_bp.route('/admin')
 @admin_required
 def admin():
-    cupboards = _dm().get_all_cupboards()
-    return render_template('admin.html', cupboards=cupboards)
+    if not _scope_selected():
+        flash('Select country, department, and group before using the admin panel.', 'warning')
+        return redirect(url_for('main.select_country'))
+
+    cupboards = _dm().get_all_cupboards(_current_scope())
+    return render_template(
+        'admin.html',
+        cupboards=cupboards,
+        countries=COUNTRIES,
+        country=session.get('country'),
+        department=session.get('department'),
+        departments_by_country=DEPARTMENTS,
+        group=session.get('group'),
+        groups_by_department=GROUPS,
+        scope_label=_scope_label(),
+    )
+
+
+@main_bp.route('/admin/update-scope', methods=['POST'])
+@admin_required
+def update_admin_scope():
+    country = request.form.get('country', '').strip().upper()
+    if country not in COUNTRIES:
+        flash('Select a valid country.', 'danger')
+        return redirect(url_for('main.admin'))
+
+    session['country'] = country
+
+    if country == 'DE':
+        session.pop('department', None)
+        session.pop('group', None)
+        flash('Admin scope updated to DE.', 'success')
+        return redirect(url_for('main.admin'))
+
+    department = request.form.get('department', '').strip().upper()
+    department_codes = [code for code, _ in DEPARTMENTS.get(country, [])]
+    if department not in department_codes:
+        flash('Select a valid department for the chosen country.', 'danger')
+        return redirect(url_for('main.admin'))
+
+    group = request.form.get('group', '').strip().upper()
+    if group not in GROUPS.get(department, []):
+        flash('Select a valid group for the chosen department.', 'danger')
+        return redirect(url_for('main.admin'))
+
+    session['department'] = department
+    session['group'] = group
+    flash(f'Admin scope updated to {country} / {department} / {group}.', 'success')
+    return redirect(url_for('main.admin'))
 
 
 @main_bp.route('/admin/add-item', methods=['POST'])
 @admin_required
 def add_item():
-    cupboard_id = int(request.form.get('cupboard_id'))
+    if not _scope_selected():
+        flash('Select country, department, and group before creating materials.', 'warning')
+        return redirect(url_for('main.select_country'))
+
+    cupboard_id = _parse_int(request.form.get('cupboard_id'))
     item_name = request.form.get('item_name', '').strip()
+
+    if cupboard_id is None:
+        flash('Select a cupboard before creating a material or equipment item.', 'danger')
+        return redirect(url_for('main.admin'))
 
     if not item_name:
         flash('Item name is required.', 'danger')
         return redirect(url_for('main.admin'))
 
-    if _dm().add_item(cupboard_id, item_name):
+    if _dm().add_item(_current_scope(), cupboard_id, item_name):
         flash(f'Item "{item_name}" added successfully.', 'success')
     else:
         flash('Failed to add item. Cupboard not found.', 'danger')
@@ -410,10 +597,18 @@ def add_item():
 @main_bp.route('/admin/remove-item', methods=['POST'])
 @admin_required
 def remove_item():
-    cupboard_id = int(request.form.get('cupboard_id'))
+    if not _scope_selected():
+        flash('Select country, department, and group before removing materials.', 'warning')
+        return redirect(url_for('main.select_country'))
+
+    cupboard_id = _parse_int(request.form.get('cupboard_id'))
     item_id = request.form.get('item_id')
 
-    if _dm().remove_item(cupboard_id, item_id):
+    if cupboard_id is None or not item_id:
+        flash('Invalid item removal request.', 'danger')
+        return redirect(url_for('main.admin'))
+
+    if _dm().remove_item(_current_scope(), cupboard_id, item_id):
         flash('Item removed successfully.', 'success')
     else:
         flash('Failed to remove item.', 'danger')
@@ -423,13 +618,17 @@ def remove_item():
 @main_bp.route('/admin/add-cupboard', methods=['POST'])
 @admin_required
 def add_cupboard():
+    if not _scope_selected():
+        flash('Select country, department, and group before creating cupboards.', 'warning')
+        return redirect(url_for('main.select_country'))
+
     cupboard_name = request.form.get('cupboard_name', '').strip()
 
     if not cupboard_name:
         flash('Cupboard name is required.', 'danger')
         return redirect(url_for('main.admin'))
 
-    if _dm().add_cupboard(cupboard_name):
+    if _dm().add_cupboard(_current_scope(), cupboard_name):
         flash(f'Cupboard "{cupboard_name}" added successfully.', 'success')
     else:
         flash('Failed to add cupboard.', 'danger')
@@ -439,9 +638,17 @@ def add_cupboard():
 @main_bp.route('/admin/remove-cupboard', methods=['POST'])
 @admin_required
 def remove_cupboard():
-    cupboard_id = int(request.form.get('cupboard_id'))
+    if not _scope_selected():
+        flash('Select country, department, and group before removing cupboards.', 'warning')
+        return redirect(url_for('main.select_country'))
 
-    if _dm().remove_cupboard(cupboard_id):
+    cupboard_id = _parse_int(request.form.get('cupboard_id'))
+
+    if cupboard_id is None:
+        flash('Invalid cupboard removal request.', 'danger')
+        return redirect(url_for('main.admin'))
+
+    if _dm().remove_cupboard(_current_scope(), cupboard_id):
         flash('Cupboard removed successfully.', 'success')
     else:
         flash('Failed to remove cupboard.', 'danger')
